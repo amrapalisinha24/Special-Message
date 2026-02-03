@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter For You 💌</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #ffd6e7 0%, #ffb3d9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Floating hearts animation */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .heart {
+            position: absolute;
+            color: rgba(255, 105, 180, 0.15);
+            font-size: 20px;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        /* Welcome Card */
+        .welcome-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.2);
+            text-align: center;
+            border: 3px solid #ffb6e1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #ff6bb5, #ff9acd, #ff6bb5);
+        }
+        
+        .title {
+            color: #ff6bb5;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(255, 182, 193, 0.3);
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            color: #ff85c0;
+            font-size: 1.4rem;
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+        
+        .input-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .input-label {
+            display: block;
+            color: #ff6bb5;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 5px;
+        }
+        
+        .name-input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #ffcce0;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            color: #ff6bb5;
+            background-color: #fff9fc;
+            transition: all 0.3s;
+        }
+        
+        .name-input:focus {
+            outline: none;
+            border-color: #ff6bb5;
+            box-shadow: 0 0 0 3px rgba(255, 107, 181, 0.2);
+        }
+        
+        .name-input::placeholder {
+            color: #ffb6d9;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #ff6bb5, #ff8cc8);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(255, 107, 181, 0.4);
+            letter-spacing: 0.5px;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 107, 181, 0.5);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        /* Letter Question Card - Now includes both letter display and question */
+        .letter-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.2);
+            text-align: center;
+            border: 3px solid #ffb6e1;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #ff6bb5, #ff9acd, #ff6bb5);
+        }
+        
+        /* Envelope display at the top */
+        .envelope-container {
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        
+        .envelope {
+            position: relative;
+            width: 160px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+        
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffccdd;
+            border-radius: 8px;
+            z-index: 1;
+            box-shadow: 0 8px 15px rgba(255, 107, 181, 0.2);
+        }
+        
+        .envelope-flap {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ff99c8;
+            clip-path: polygon(0% 0%, 50% 50%, 100% 0%);
+            border-radius: 8px 8px 0 0;
+            z-index: 2;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+        }
+        
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope-body {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            left: 5%;
+            top: 5%;
+            border-radius: 4px;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .envelope-body i {
+            color: #ff6bb5;
+            font-size: 2rem;
+        }
+        
+        .letter-text {
+            color: #ff6bb5;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        /* Question text - exactly as in screenshot */
+        .question-text {
+            color: #ff6bb5;
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 35px;
+            line-height: 1.4;
+        }
+        
+        .user-name {
+            color: #ff4da6;
+            text-transform: capitalize;
+        }
+        
+        /* Options container - exactly as in screenshot */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+            background: linear-gradient(to right, #ff6bb5, #ff8cc8);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(255, 107, 181, 0.3);
+            text-align: left;
+            width: 100%;
+        }
+        
+        .checkbox-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 181, 0.4);
+        }
+        
+        .checkbox-custom {
+            width: 24px;
+            height: 24px;
+            border: 2px solid white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .checkbox-custom i {
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .checkbox-option.selected .checkbox-custom i {
+            opacity: 1;
+        }
+        
+        .no-option {
+            background: #f5f5f5;
+            color: #888;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .no-option:hover {
+            background: #eeeeee;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Video Message Card */
+        .video-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.2);
+            text-align: center;
+            border: 3px solid #ffb6e1;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #ff6bb5, #ff9acd, #ff6bb5);
+        }
+        
+        .video-title {
+            color: #ff6bb5;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+        
+        .video-container {
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        video {
+            width: 100%;
+            display: block;
+        }
+        
+        .closing-text {
+            color: #ff85c0;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+        
+        /* Popup Modal */
+        .popup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .popup-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 3px solid #ff6bb5;
+            animation: popupAppear 0.3s ease-out;
+        }
+        
+        @keyframes popupAppear {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .popup-title {
+            color: #ff6bb5;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+        
+        .popup-text {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .btn-popup {
+            background: linear-gradient(to right, #ff6bb5, #ff8cc8);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(255, 107, 181, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-popup:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 107, 181, 0.5);
+        }
+        
+        /* Prank message */
+        .prank-message {
+            background: #fff0f7;
+            border: 2px dashed #ff6bb5;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .prank-message h3 {
+            color: #ff4da6;
+            margin-bottom: 10px;
+        }
+        
+        /* Restart button */
+        .restart-btn {
+            background: linear-gradient(to right, #ff6bb5, #ff8cc8);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(255, 107, 181, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 181, 0.4);
+        }
+        
+        /* Decorative elements */
+        .decoration {
+            position: absolute;
+            z-index: 1;
+            color: rgba(255, 107, 181, 0.1);
+            font-size: 3rem;
+        }
+        
+        .decoration-1 { top: -20px; right: -20px; }
+        .decoration-2 { bottom: -20px; left: -20px; transform: rotate(180deg); }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .title { font-size: 2.3rem; }
+            .subtitle { font-size: 1.2rem; }
+            .question-text { font-size: 1.6rem; }
+            .popup-title { font-size: 1.8rem; }
+            .welcome-card, .letter-card, .video-card { padding: 30px 20px; }
+            .envelope { width: 140px; height: 90px; }
+            .checkbox-option { padding: 14px 18px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <!-- Decorative corner elements -->
+    <div class="decoration decoration-1">✧･ﾟ: *✧･ﾟ:* ♡ *:･ﾟ✧*:･ﾟ✧</div>
+    <div class="decoration decoration-2">✧･ﾟ: *✧･ﾟ:* ♡ *:･ﾟ✧*:･ﾟ✧</div>
+    
+    <div class="container">
+        <!-- Welcome Card -->
+        <div class="welcome-card" id="welcomeCard">
+            <h1 class="title">Hey beloved!</h1>
+            <p class="subtitle">What should I call you, lovely?</p>
+            
+            <div class="input-container">
+                <label class="input-label">Enter your name...</label>
+                <input type="text" class="name-input" id="nameInput" placeholder="Type your name here">
+            </div>
+            
+            <button class="btn-primary" id="submitBtn">
+                Show Me The Surprise!
+            </button>
+            
+            <!-- Prank instructions (hidden by default) -->
+            <div class="prank-message" id="prankMessage">
+                <h3>🎭 PRANK MODE ACTIVATED!</h3>
+                <p>Your video <code>prank.mp4</code> is ready to play when they open the letter!</p>
+                <p><small>Make sure <code>prank.mp4</code> is in the same folder as this HTML file.</small></p>
+            </div>
+        </div>
+        
+        <!-- Letter Question Card (Single card with envelope + question) -->
+        <div class="letter-card" id="letterCard">
+            <!-- Envelope display at the top -->
+            <div class="envelope-container">
+                <div class="envelope" id="envelope">
+                    <div class="envelope-back"></div>
+                    <div class="envelope-flap"></div>
+                    <div class="envelope-body">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+                <p class="letter-text">Your Special Letter 💌</p>
+            </div>
+            
+            <!-- Question text - exactly as in screenshot -->
+            <h2 class="question-text" id="questionText">
+                <span id="userName">suzie</span>, do you want to open your special letter?
+            </h2>
+            
+            <!-- Options - exactly as in screenshot -->
+            <div class="options-container">
+                <div class="checkbox-option" id="yesOption">
+                    <div class="checkbox-custom">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>YES, PLEASE!</span>
+                </div>
+                
+                <div class="checkbox-option no-option" id="noOption">
+                    <div class="checkbox-custom">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>No, maybe later</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Video Message Card -->
+        <div class="video-card" id="videoCard">
+            <h2 class="video-title">Your Special Message 💖</h2>
+            
+            <div class="video-container">
+                <video id="messageVideo" controls autoplay>
+                    <source src="prank.mp4" type="video/mp4">
+                    
+                    <!-- Fallback message if video doesn't load -->
+                    Your browser doesn't support the video tag. 
+                    Make sure "prank.mp4" is in the same folder as this HTML file.
+                </video>
+            </div>
+            
+            <p class="closing-text">Hope this reality check made your day special! 💕</p>
+            
+            <button class="restart-btn" id="restartBtn">
+                <i class="fas fa-redo"></i> Reality Check Again
+            </button>
+        </div>
+    </div>
+    
+    <!-- Popup Modal -->
+    <div class="popup-modal" id="popupModal">
+        <div class="popup-content">
+            <h2 class="popup-title">Invalid Option!</h2>
+            <p class="popup-text">You know you want to see it! 😊</p>
+            <button class="btn-popup" id="tryAgainBtn">
+                Try Again ❤️
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const welcomeCard = document.getElementById('welcomeCard');
+        const letterCard = document.getElementById('letterCard');
+        const videoCard = document.getElementById('videoCard');
+        const popupModal = document.getElementById('popupModal');
+        const prankMessage = document.getElementById('prankMessage');
+        const envelope = document.getElementById('envelope');
+        
+        const nameInput = document.getElementById('nameInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const userNameElement = document.getElementById('userName');
+        const questionText = document.getElementById('questionText');
+        const yesOption = document.getElementById('yesOption');
+        const noOption = document.getElementById('noOption');
+        const tryAgainBtn = document.getElementById('tryAgainBtn');
+        const messageVideo = document.getElementById('messageVideo');
+        const restartBtn = document.getElementById('restartBtn');
+        const heartsContainer = document.getElementById('heartsContainer');
+        
+        // Variables
+        let userName = '';
+        let selectedOption = null;
+        
+        // Initialize floating hearts
+        function createHearts() {
+            const heartCount = 25;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤';
+                
+                // Random position and size
+                const size = Math.random() * 15 + 10;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 15;
+                
+                heart.style.fontSize = `${size}px`;
+                heart.style.left = `${left}%`;
+                heart.style.animationDelay = `${delay}s`;
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Test if prank.mp4 exists
+        function testVideoFile() {
+            const testVideo = document.createElement('video');
+            testVideo.src = 'prank.mp4';
+            
+            testVideo.addEventListener('error', function() {
+                console.log("❌ prank.mp4 not found");
+                prankMessage.innerHTML = `
+                    <h3>⚠️ VIDEO FILE MISSING</h3>
+                    <p>Please make sure your prank video is named <code>prank.mp4</code> 
+                    and placed in the same folder as this HTML file.</p>
+                    <p><strong>Current folder structure should be:</strong></p>
+                    <pre style="text-align: left; background: white; padding: 10px; border-radius: 5px;">
+PRANK/
+├── prank.mp4      ← Your prank video
+└── prank.html     ← This file
+                    </pre>
+                `;
+                prankMessage.style.display = 'block';
+            });
+            
+            // Trigger loading
+            testVideo.load();
+        }
+        
+        // Event Listeners
+        submitBtn.addEventListener('click', handleNameSubmit);
+        nameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleNameSubmit();
+        });
+        
+        yesOption.addEventListener('click', function() {
+            if (selectedOption === 'yes') {
+                // Already selected, open the letter
+                openLetter();
+            } else {
+                // Select yes option
+                selectOption('yes');
+            }
+        });
+        
+        noOption.addEventListener('click', function() {
+            if (selectedOption === 'no') {
+                // Already selected, show popup
+                showPopup();
+            } else {
+                // Select no option
+                selectOption('no');
+            }
+        });
+        
+        tryAgainBtn.addEventListener('click', function() {
+            popupModal.style.display = 'none';
+        });
+        
+        restartBtn.addEventListener('click', function() {
+            // Go back to the letter card
+            videoCard.style.display = 'none';
+            letterCard.style.display = 'block';
+            
+            // Close the envelope
+            envelope.classList.remove('open');
+            
+            // Reset video
+            messageVideo.pause();
+            messageVideo.currentTime = 0;
+            
+            // Reset selection
+            selectedOption = null;
+            yesOption.classList.remove('selected');
+            noOption.classList.remove('selected');
+        });
+        
+        // Functions
+        function handleNameSubmit() {
+            userName = nameInput.value.trim();
+            
+            if (userName === '') {
+                // Add shake animation to input
+                nameInput.style.animation = 'none';
+                setTimeout(() => {
+                    nameInput.style.animation = 'shake 0.5s';
+                }, 10);
+                
+                // Remove animation after it completes
+                setTimeout(() => {
+                    nameInput.style.animation = '';
+                }, 500);
+                
+                return;
+            }
+            
+            // Capitalize first letter
+            userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+            
+            // Update the question text
+            userNameElement.textContent = userName;
+            
+            // Hide welcome card and show letter card
+            welcomeCard.style.display = 'none';
+            letterCard.style.display = 'block';
+            
+            // Reset selection
+            selectedOption = null;
+            yesOption.classList.remove('selected');
+            noOption.classList.remove('selected');
+        }
+        
+        function selectOption(option) {
+            // Deselect previous option
+            yesOption.classList.remove('selected');
+            noOption.classList.remove('selected');
+            
+            // Select new option
+            selectedOption = option;
+            
+            if (option === 'yes') {
+                yesOption.classList.add('selected');
+                
+                // After a short delay, open the letter
+                setTimeout(openLetter, 500);
+            } else {
+                noOption.classList.add('selected');
+                
+                // After a short delay, show popup
+                setTimeout(showPopup, 500);
+            }
+        }
+        
+        function openLetter() {
+            // Open the envelope with animation
+            envelope.classList.add('open');
+            
+            // Hide letter card and show video card
+            setTimeout(() => {
+                letterCard.style.display = 'none';
+                videoCard.style.display = 'block';
+                
+                // Try to play the video
+                const playPromise = messageVideo.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Video play error:", error);
+                        showVideoError();
+                    });
+                }
+            }, 800); // Wait for envelope animation to complete
+        }
+        
+        function showVideoError() {
+            // If video fails to play, show a custom message
+            const videoContainer = document.querySelector('.video-container');
+            if (videoContainer) {
+                videoContainer.innerHTML = `
+                    <div style="background: #fff9fc; padding: 30px; border-radius: 15px; text-align: center; border: 2px dashed #ffcce0;">
+                        <h3 style="color: #ff6bb5; margin-bottom: 15px;">🎭 PRANK TIME! 💖</h3>
+                        <p style="color: #ff85c0; margin-bottom: 15px;">Hey <strong>${userName}</strong>!</p>
+                        <p style="color: #ff4da6; font-size: 1.1rem; margin-bottom: 20px;">
+                            You've been pranked! 😂
+                        </p>
+                        <p style="color: #ffa8d5; font-size: 0.9rem;">
+                            <i>This was all part of the fun! Hope you enjoyed it! 💕</i>
+                        </p>
+                        <div style="font-size: 3rem; margin: 20px 0; color: #ff6bb5;">
+                            😂 🎭 💖
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function showPopup() {
+            popupModal.style.display = 'flex';
+        }
+        
+        // Initialize
+        function init() {
+            createHearts();
+            testVideoFile();
+            
+            // Add a nice greeting based on time of day
+            const hour = new Date().getHours();
+            let greeting = "lovely";
+            
+            if (hour < 12) greeting = "sunshine";
+            else if (hour < 18) greeting = "lovely";
+            else greeting = "sweetheart";
+            
+            document.querySelector('.subtitle').textContent = `What should I call you, ${greeting}?`;
+            
+            // Add CSS for shake animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Show a secret message in console
+            console.log("%c🎭 PRANK WEBSITE ACTIVATED 🎭", "color: #ff6bb5; font-size: 20px; font-weight: bold;");
+            console.log("%cYour prank.mp4 video will play when they click 'YES, PLEASE!'", "color: #ff85c0; font-size: 14px;");
+        }
+        
+        // Run initialization when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
